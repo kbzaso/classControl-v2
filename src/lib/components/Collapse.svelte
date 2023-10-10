@@ -5,31 +5,22 @@
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import { classOpenId } from '$lib/stores.js';
 
-	const format = (date, locale, options) => {
-		return new Intl.DateTimeFormat(locale, options).format(date);
-	};
-
+	import { format, formatDistance, formatRelative, subDays } from 'date-fns';
+	import { es } from 'date-fns/locale';
+	import { utcToZonedTime } from 'date-fns-tz';
 	export let data: any;
 	export let user: any;
 	export let classId: any;
 
 	$: userExists = data.assistants.some((assistant) => assistant.id == user.id);
 
-	onMount(() => {
-		$: userExists = data.assistants.some((assistant) => assistant.id == user.id);
-	});
+	const date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
+	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
+	const formattedTime = format(date, 'HH:mm', { locale: es });
 
 	$: firstThreeChars = data.id.substring(0, 3);
-
-	let date = data?.when.toLocaleString('en-US', { timeZone: 'America/Santiago' });
-	date = new Date(date);
-
-	const offset = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-	const dateWithOffset = new Date(date.getTime() - offset);
-	$: isoString = dateWithOffset.toISOString().slice(0, 16);
 
 	$: isOpen = $classOpenId === classId ? true : false;
 
@@ -40,8 +31,6 @@
 			$classOpenId = classId;
 		}
 	}
-
-	console.log($page)
 </script>
 
 <button
@@ -51,8 +40,8 @@
 	on:click={toggle}
 >
 	<div class="space-y-2 flex flex-col">
-		<h2 class="font-semibold capitalize">
-			{format(data.when, 'es-CL', { weekday: 'long', month: 'long', day: 'numeric' })}
+		<h2 class="font-semibold capitalize text-left">
+			{formattedDate}
 		</h2>
 		<div class="text-left flex gap-4">
 			<Badge level={data?.level} size={'badge-md'} />
@@ -69,7 +58,7 @@
 	</div>
 	<div class="flex gap-1">
 		<iconify-icon class="mt-1" icon="ri:time-line" />
-		<span>{format(data.when, 'es-CL', { timeStyle: 'short', timeZone: 'America/Santiago' })}</span>
+		{formattedTime}
 		<iconify-icon
 			class="mt-1 h-fit text-yellow-300 transition-all"
 			class:rotate-180={isOpen}
@@ -94,7 +83,7 @@
 							</div>
 						</div>
 						<p>{assistant.first_name} {assistant.last_name}</p>
-							<Badge level={assistant.level} size={'badge-sm'} />
+						<Badge level={assistant.level} size={'badge-sm'} />
 					</figure>
 					{#if user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id}
 						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
@@ -111,28 +100,24 @@
 					{/if}
 				</li>
 			{/each}
-				{#if !userExists && user.classesRemaining > 0 && data.max_students >= data.assistants.length}
-					<form action="/horarios?/addUserToClass" method="POST" use:enhance>
-						<input type="hidden" name="class_id" value={classId} />
-						<input type="hidden" name="user_id" value={user.id} />
-						<button class="btn btn-success w-full" type="submit">
-								Asistir
-						</button>
-					</form>
-				{:else if userExists}
-					<form action="/horarios?/deleteUserToClass" method="POST" use:enhance>
-						<input type="hidden" name="class_id" value={classId} />
-						<input type="hidden" name="user_id" value={user.id} />
+			{#if !userExists && user.classesRemaining > 0 && data.max_students >= data.assistants.length}
+				<form action="/horarios?/addUserToClass" method="POST" use:enhance>
+					<input type="hidden" name="class_id" value={classId} />
+					<input type="hidden" name="user_id" value={user.id} />
+					<button class="btn btn-success w-full" type="submit"> Asistir </button>
+				</form>
+			{:else if userExists}
+				<form action="/horarios?/deleteUserToClass" method="POST" use:enhance>
+					<input type="hidden" name="class_id" value={classId} />
+					<input type="hidden" name="user_id" value={user.id} />
 
-						<button class="btn btn-error w-full" type="submit">
-								No Asistir
-						</button>
-					</form>
-				{/if}
+					<button class="btn btn-error w-full" type="submit"> No Asistir </button>
+				</form>
+			{/if}
 
-				{#if user.classesRemaining <= 0 && !userExists && data.level === user.level}
-					<p class="text-center text-gray-600">No tienes clases disponibles</p>
-				{/if}
+			{#if user.classesRemaining <= 0 && !userExists && data.level === user.level}
+				<p class="text-center text-gray-600">No tienes clases disponibles</p>
+			{/if}
 
 			{#if user.role === 'ADMIN'}
 				<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 space-y-4">
@@ -141,9 +126,7 @@
 					>
 					<form action="/horarios?/delete" method="POST" class="w-full" use:enhance>
 						<input type="hidden" name="id" value={classId} />
-						<button class="btn btn-error w-full btn-outline" type="submit">
-								Eliminar
-						</button>
+						<button class="btn btn-error w-full btn-outline" type="submit"> Eliminar </button>
 					</form>
 				</div>
 			{/if}
@@ -167,12 +150,12 @@
 				>Fecha
 
 				<input
-					bind:value={isoString}
 					type="datetime-local"
 					id="when"
 					name="when"
 					class="input input-bordered input-primary w-full mt-1 text-left"
 					min="2023-01-01"
+					required
 				/>
 			</label>
 
@@ -190,8 +173,12 @@
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<button class="btn btn-success w-full" onclick={`my_modal_${firstThreeChars}.close()`} type="submit">
-					Actualizar
+			<button
+				class="btn btn-success w-full"
+				onclick={`my_modal_${firstThreeChars}.close()`}
+				type="submit"
+			>
+				Actualizar
 			</button>
 
 			<button

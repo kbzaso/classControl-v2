@@ -14,8 +14,9 @@ function generateRandomFilename(extension: string): string {
 	return `${timestamp}-${randomNumber}.${extension}`;
   }
 
-export const load: PageServerLoad = async ({ params }) => {
-
+export const load: PageServerLoad = async ({ params, cookies }) => {
+	const session =  await cookies.get('auth_session');
+	if (!session) throw redirect(302, '/');	
 	// bring my user info from the database
 	const user = await client.user.findUnique({
 		where: {

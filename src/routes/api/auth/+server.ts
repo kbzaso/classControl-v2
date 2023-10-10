@@ -12,5 +12,5 @@ export async function POST({ locals }) {
             'Content-Type': 'application/json', 
         } 
     }
-    return new Response(JSON.stringify({ success: true }), options);
+    throw redirect(302, '/');
 }

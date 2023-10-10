@@ -1,3 +1,5 @@
+
+
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { LEVEL } from '$lib/constants/const.js';
@@ -37,31 +39,30 @@
 	<p class="font-semibold text-lg">Bienvenido {data.session.user.first_name} 👋</p>
 
 	{#if data.session.user.level === null && data.session.user.role !== 'ADMIN'}
-	<p class="text-warning">Contactate con la profesora para actuvar tu cuenta</p>
+		<p class="text-warning">Contactate con la profesora para activar tu cuenta</p>
 	{:else}
+		<span class="text-warning">Clases disponibles: {data.session.user.classesRemaining}</span>
 
-	<span class="text-warning">Clases disponibles: {data.session.user.classesRemaining}</span>
-
-	{#if data.classes.length === 0}
-		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
-	{:else}
-		<h1 class="text-2xl font-semibold mt-4">Próximas clases</h1>
-		{#each data.classes as training, index}
-			{#if canAccessClass(data.session.user, training)}
-				<Collapse data={training} user={data.session.user} classId={training.id} />
-			{/if}
-		{/each}
-	{/if}
-	{#if data.session.user.role === 'ADMIN'}
-		<button
-			class="btn backdrop-blur-xl bg-white/10 border-white rounded-full w-16 h-16 fixed bottom-20 right-6"
-			onclick="my_modal_5.showModal()"
-		>
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-				><path fill="#f9e710" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg
+		{#if data.classes.length === 0}
+			<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
+		{:else}
+			<h1 class="text-2xl font-semibold mt-4">Próximas clases</h1>
+			{#each data.classes as training, index}
+				{#if canAccessClass(data.session.user, training)}
+					<Collapse data={training} user={data.session.user} classId={training.id} />
+				{/if}
+			{/each}
+		{/if}
+		{#if data.session.user.role === 'ADMIN'}
+			<button
+				class="btn backdrop-blur-xl bg-white/10 border-white rounded-full w-16 h-16 fixed bottom-20 right-6"
+				onclick="my_modal_5.showModal()"
 			>
-		</button>
-	{/if}
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+					><path fill="#f9e710" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg
+				>
+			</button>
+		{/if}
 	{/if}
 </main>
 

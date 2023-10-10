@@ -4,23 +4,22 @@
 	import Badge from './Badge.svelte';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import { classOpenId } from '$lib/stores.js';
 
-	const format = (date, locale, options) => {
-		return new Intl.DateTimeFormat(locale, options).format(date);
-	};
+	import { format, formatDistance, formatRelative, subDays } from 'date-fns';
+	import { es } from 'date-fns/locale';
+	import { utcToZonedTime } from 'date-fns-tz';
 
 	export let data: any;
 	export let user: any;
 	export let users: any;
 	export let training: any;
 
-	$: firstThreeChars = data.id.substring(0, 3);
+	const date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
+	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
+	const formattedTime = format(date, 'HH:mm', { locale: es });
 
-	let date = data?.when.toLocaleString('en-US', { timeZone: 'America/Santiago' });
-	date = new Date(date);
+	$: firstThreeChars = data.id.substring(0, 3);
 
 
 	$: isOpen = $classOpenId === training.id ? true : false;
@@ -46,7 +45,7 @@
 >
 	<div class="space-y-2 flex flex-col">
 		<h2 class="font-semibold capitalize">
-			{format(data.when, 'es-CL', { weekday: 'long', month: 'long', day: 'numeric' })}
+			{formattedDate}
 		</h2>
 		<div class="text-left flex gap-4">
 			<Badge level={data?.level} size={'badge-md'} />
@@ -63,7 +62,7 @@
 	</div>
 	<div class="flex gap-1">
 		<iconify-icon class="mt-1" icon="ri:time-line" />
-		<span>{format(data.when, 'es-CL', { timeStyle: 'short', timeZone: 'America/Santiago' })}</span>
+		<span>{formattedTime}</span>
 		<iconify-icon
 			class="mt-1 h-fit text-yellow-300 transition-all"
 			class:rotate-180={isOpen}

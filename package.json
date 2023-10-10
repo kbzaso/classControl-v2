@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -34,12 +34,14 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"flowbite": "^1.7.0",
-		"flowbite-svelte": "^0.40.2",
 		"@lucia-auth/adapter-prisma": "^3.0.2",
 		"@prisma/client": "^5.4.1",
 		"@supabase/supabase-js": "^2.29.0",
-		"lucia": "^2.7.1",
-		"iconify-icon": "^1.0.8"
+		"date-fns": "^2.30.0",
+		"date-fns-tz": "^2.0.0",
+		"flowbite": "^1.7.0",
+		"flowbite-svelte": "^0.40.2",
+		"iconify-icon": "^1.0.8",
+		"lucia": "^2.7.1"
 	}
 }
