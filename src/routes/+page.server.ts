@@ -5,7 +5,9 @@ import { fail, redirect } from '@sveltejs/kit';
 
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals, cookies }) => {
+export const load: PageServerLoad = async ({ cookies }) => {
+	const session = await cookies.get('auth_session');
+	if (session) throw redirect(302, '/horarios');	
 	return {};
 };
 

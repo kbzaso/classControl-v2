@@ -17,6 +17,11 @@ export const load = async ({ locals, request, cookies }) => {
 			level: true,
 			max_students: true,
 			assistants: true
+		},
+		where: {
+			when: {
+				gt: new Date().toISOString()
+			}
 		}
 	});
 

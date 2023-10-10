@@ -31,7 +31,6 @@
 			return false; // User cannot access class
 		}
 	}
-	console.log(data);
 </script>
 
 <main class="mb-20">
@@ -55,7 +54,7 @@
 	{/if}
 	{#if data.session.user.role === 'ADMIN'}
 		<button
-			class="btn backdrop-blur-xl bg-white/10 border-none rounded-full w-16 h-16 fixed bottom-20 right-6"
+			class="btn backdrop-blur-xl bg-white/10 border-white rounded-full w-16 h-16 fixed bottom-20 right-6"
 			onclick="my_modal_5.showModal()"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -89,10 +88,6 @@
 					required
 				/>
 			</label>
-			<!-- {#if $errors.when}
-			<FormAlert bind:errorMessage={$errors.when} />
-		{/if} -->
-
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
 				<select id="level" class="select select-primary w-full" name="level">
@@ -101,9 +96,6 @@
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<!-- {#if $errors.level}
-			<FormAlert bind:errorMessage={$errors.level} />
-		{/if} -->
 			<button class="btn btn-success" onclick="my_modal_5.close()" type="submit"> Crear </button>
 			<button onclick="my_modal_5.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button

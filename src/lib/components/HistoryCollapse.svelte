@@ -14,7 +14,8 @@
 
 	export let data: any;
 	export let user: any;
-	export let classId: any;
+	export let users: any;
+	export let training: any;
 
 	$: firstThreeChars = data.id.substring(0, 3);
 
@@ -22,15 +23,18 @@
 	date = new Date(date);
 
 
-	$: isOpen = $classOpenId === classId ? true : false;
+	$: isOpen = $classOpenId === training.id ? true : false;
 
 	function toggle() {
-		if ($classOpenId === classId) {
+		if ($classOpenId === training.id) {
 			$classOpenId = '';
 		} else {
-			$classOpenId = classId;
+			$classOpenId = training.id;
 		}
 	}
+	
+	const filteredUsers = users.filter(user => !training.assistants.some(assistant => assistant.id === user.id));
+
 
 </script>
 
@@ -86,19 +90,15 @@
 						<p>{assistant.first_name} {assistant.last_name}</p>
 							<Badge level={assistant.level} size={'badge-sm'} />
 					</figure>
-					{#if user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id}
-						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
-							><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
-								><path
-									fill="currentColor"
-									d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68ZM16 25c-5.3 0-10.9-3.93-12.93-9C5.1 10.93 10.7 7 16 7s10.9 3.93 12.93 9C26.9 21.07 21.3 25 16 25Z"
-								/><path
-									fill="currentColor"
-									d="M16 10a6 6 0 1 0 6 6a6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z"
-								/></svg
-							></a
-						>
-					{/if}
+
+						<form method="POST" action="?/deleteUserToClass" use:enhance>
+							<input type="hidden" name="class_id" value={training.id} />
+							<input type="hidden" name="user_id" value={assistant.id} />
+							<button type="submit" class="btn btn-sm btn-circle btn-ghost text-error">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"/></svg>
+							</button>
+						</form>
+
 				</li>
 			{/each}
 
@@ -113,43 +113,33 @@
 	</ul>
 {/if}
 
-<!-- UPDATE CLASS -->
+<!-- ADD USER TO CLASS -->
 <dialog id={`my_modal_${firstThreeChars}`} class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		<form
 			method="POST"
-			action="?/addUser"
+			action="?/addUserToClass"
 			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
 			use:enhance
 		>
-			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar clase</h2>
-			<input type="hidden" name="id" value={classId} />
-			<label for="when" class="text-gray-600"
-				>Fecha
-
-				<input
-					type="datetime-local"
-					id="when"
-					name="when"
-					class="input input-bordered input-primary w-full mt-1 text-left"
-					min="2023-01-01"
-				/>
-			</label>
+			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Agregar alumno</h2>
+			<input type="hidden" name="class_id" value={training.id} />
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
-				Nivel
+				Alumnos
 				<select
-					id="level"
+					id="user_id"
 					class="select select-primary w-full"
 					required
-					name="level"
+					name="user_id"
 				>
-					<option value="BASIC">Básico</option>
-					<option value="INTERMEDIATE">Intermedio</option>
-					<option value="ADVANCED">Avanzado</option>
+					{#each filteredUsers as user}
+						<option value={user.id}>{user.first_name} {user.last_name}</option>
+					{/each}
 				</select>
 			</label>
+
 			<button class="btn btn-success w-full" onclick={`my_modal_${firstThreeChars}.close()`} type="submit">
 					Actualizar
 			</button>

@@ -38,20 +38,9 @@
 	<h1 class="text-2xl font-semibold mt-4">Clases pasadas</h1>
 	{#each data.classes as training, index}
 		{#if canAccessClass(data.session.user, training)}
-			<HistoryCollapse data={training} user={data.session.user} classId={training.id} />
+			<HistoryCollapse data={training} user={data.session.user} users={data.users} training={training} />
 		{/if}
 	{/each}
-
-	{#if data.session.user.role === 'ADMIN'}
-		<button
-			class="btn backdrop-blur-xl bg-white/10 border-none rounded-full w-16 h-16 fixed bottom-20 right-6"
-			onclick="my_modal_5.showModal()"
-		>
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-				><path fill="#f9e710" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg
-			>
-		</button>
-	{/if}
 </main>
 
 <!-- ADD CLASS -->
