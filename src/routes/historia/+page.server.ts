@@ -59,7 +59,12 @@ export const actions: Actions = {
 		try {
 			await client.user.update({
 				where: {
-					id: userId
+					id: userId,
+					AND: {
+						classesRemaining: {
+							gt: 0
+						}
+					}
 				},
 				data: {
 					classesRemaining: {
@@ -74,7 +79,9 @@ export const actions: Actions = {
 			});
 			return { success: true, message: 'Usuario agregado a la clase' };
 		} catch (err) {
-			console.log(err);
+			return fail(400, {
+				error: 'Usuario no tiene clases disponibles'
+			});
 		}
 	},
 	deleteUserToClass: async ({ request, locals }) => {

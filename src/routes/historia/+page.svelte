@@ -4,6 +4,8 @@
 	import HistoryCollapse from '$lib/components/HistoryCollapse.svelte';
 
 	export let data;
+	export let form;
+	$: ({ users } = data);
 
 	interface User {
 		id: string;
@@ -31,14 +33,13 @@
 			return false; // User cannot access class
 		}
 	}
-	console.log(data);
 </script>
 
 <main class="mb-20">
 	<h1 class="text-2xl font-semibold mt-4">Clases pasadas</h1>
 	{#each data.classes as training, index}
 		{#if canAccessClass(data.session.user, training)}
-			<HistoryCollapse data={training} user={data.session.user} users={data.users} training={training} />
+			<HistoryCollapse data={training} user={data.session.user} {users} {training} form={form} />
 		{/if}
 	{/each}
 </main>
@@ -66,10 +67,6 @@
 					required
 				/>
 			</label>
-			<!-- {#if $errors.when}
-			<FormAlert bind:errorMessage={$errors.when} />
-		{/if} -->
-
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
 				<select id="level" class="select select-primary w-full" name="level">
@@ -78,9 +75,6 @@
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<!-- {#if $errors.level}
-			<FormAlert bind:errorMessage={$errors.level} />
-		{/if} -->
 			<button class="btn btn-success" onclick="my_modal_5.close()" type="submit"> Crear </button>
 			<button onclick="my_modal_5.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button

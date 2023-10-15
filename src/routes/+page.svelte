@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	export let data
 	export let form
-	console.log(form)
 </script>
 
 <main class="grow flex flex-col justify-center">

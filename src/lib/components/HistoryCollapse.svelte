@@ -14,13 +14,13 @@
 	export let user: any;
 	export let users: any;
 	export let training: any;
+	export let form: any;
 
 	const date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
 	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
 	const formattedTime = format(date, 'HH:mm', { locale: es });
 
 	$: firstThreeChars = data.id.substring(0, 3);
-
 
 	$: isOpen = $classOpenId === training.id ? true : false;
 
@@ -31,10 +31,10 @@
 			$classOpenId = training.id;
 		}
 	}
-	
-	const filteredUsers = users.filter(user => !training.assistants.some(assistant => assistant.id === user.id));
 
-
+	$: filteredUsers = users.filter(
+		(user) => !training.assistants.some((assistant) => assistant.id === user.id)
+	);
 </script>
 
 <button
@@ -86,20 +86,30 @@
 								/>
 							</div>
 						</div>
-						<p>{assistant.first_name} {assistant.last_name}</p>
+						<a href={assistant.role !== 'MASTER' ? `/alumnos/${assistant.id}`: ''} class="flex flex-col">
+							<p>{assistant.first_name} {assistant.last_name}</p>
 							<Badge level={assistant.level} size={'badge-sm'} />
+						</a>
 					</figure>
 
-						<form method="POST" action="?/deleteUserToClass" use:enhance>
-							<input type="hidden" name="class_id" value={training.id} />
-							<input type="hidden" name="user_id" value={assistant.id} />
-							<button type="submit" class="btn btn-sm btn-circle btn-ghost text-error">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"/></svg>
-							</button>
-						</form>
-
+					<form method="POST" action="?/deleteUserToClass" use:enhance>
+						<input type="hidden" name="class_id" value={training.id} />
+						<input type="hidden" name="user_id" value={assistant.id} />
+						<button type="submit" class="btn btn-sm btn-circle btn-ghost text-error">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+								><path
+									fill="currentColor"
+									d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"
+								/></svg
+							>
+						</button>
+					</form>
 				</li>
 			{/each}
+
+			{#if form?.error}
+				<p class="text-error">{form?.error}</p>
+			{/if}
 
 			{#if user.role === 'ADMIN'}
 				<div>
@@ -127,20 +137,19 @@
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Alumnos
-				<select
-					id="user_id"
-					class="select select-primary w-full"
-					required
-					name="user_id"
-				>
+				<select id="user_id" class="select select-primary w-full" required name="user_id">
 					{#each filteredUsers as user}
 						<option value={user.id}>{user.first_name} {user.last_name}</option>
 					{/each}
 				</select>
 			</label>
 
-			<button class="btn btn-success w-full" onclick={`my_modal_${firstThreeChars}.close()`} type="submit">
-					Actualizar
+			<button
+				class="btn btn-success w-full"
+				onclick={`my_modal_${firstThreeChars}.close()`}
+				type="submit"
+			>
+				Actualizar
 			</button>
 
 			<button
