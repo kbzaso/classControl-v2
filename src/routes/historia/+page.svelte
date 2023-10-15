@@ -39,10 +39,7 @@
 	<h1 class="text-2xl font-semibold mt-4">Clases pasadas</h1>
 	{#each data.classes as training, index}
 		{#if canAccessClass(data.session.user, training)}
-			{#if form?.error}
-				<p class="text-error">{form?.error}</p>
-			{/if}
-			<HistoryCollapse data={training} user={data.session.user} {users} {training} />
+			<HistoryCollapse data={training} user={data.session.user} {users} {training} form={form} />
 		{/if}
 	{/each}
 </main>

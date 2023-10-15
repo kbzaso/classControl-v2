@@ -14,6 +14,7 @@
 	export let user: any;
 	export let users: any;
 	export let training: any;
+	export let form: any;
 
 	const date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
 	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
@@ -105,6 +106,10 @@
 					</form>
 				</li>
 			{/each}
+
+			{#if form?.error}
+				<p class="text-error">{form?.error}</p>
+			{/if}
 
 			{#if user.role === 'ADMIN'}
 				<div>
