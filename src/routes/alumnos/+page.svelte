@@ -1,5 +1,8 @@
 <script lang="ts">
+		import { fly, slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
+	import { PUBLIC_PROJECT_URL } from '$env/static/public';
+	import Badge from '$lib/components/Badge.svelte';
 
 
 	import type { PageData } from './$types';
@@ -14,32 +17,31 @@
 	<h1 class="text-xl uppercase tracking-widest text-yellow-300 mb-4">Lista de alumnos</h1>
 
 	<div class="overflow-x-auto border rounded-xl border-blue-900">
-		<table class="table">
-			<!-- head -->
-			<thead class="bg-blue-900 text-white">
-				<tr>
-					<th>Alumno</th>
-					<th />
-				</tr>
-			</thead>
-			<tbody>
-				<!-- row 1 -->
-				{#each users as user}
-					<tr>
-						<td class="text-md flex flex-col gap-1">
-							<span>
-								{user.first_name}
-								{user.last_name}
-							</span>
-						</td>
-
-						<td>
-							<a href={`/alumnos/${user.id}`} class="btn btn-outline w-full btn-warning">Ver</a>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+		<ul class="space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4">
+			{#each users as user}
+			<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
+				<figure class="flex items-center gap-2">
+					<div class="avatar">
+						<div class="w-10 mask mask-squircle">
+							<img
+								alt="Avatar"
+								src={user.avatarUrl
+									? `${PUBLIC_PROJECT_URL}/storage/v1/object/public/profiles/${user.avatarUrl}`
+									: 'https://assets.adnradio.cl/2022/03/Stone-Cold-Steve-Austin-WrestleMania-38-WWE.png'}
+							/>
+						</div>
+					</div>
+					<a
+					href={`/alumnos/${user.id}`}
+						class="flex flex-col"
+					>
+						<p>{user.first_name} {user.last_name}</p>
+						<Badge level={user.level} size={'badge-sm'} />
+					</a>
+				</figure>
+			</li>
+			{/each}
+		</ul>
 	</div>
 </section>
 
