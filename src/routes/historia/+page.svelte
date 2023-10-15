@@ -66,10 +66,6 @@
 					required
 				/>
 			</label>
-			<!-- {#if $errors.when}
-			<FormAlert bind:errorMessage={$errors.when} />
-		{/if} -->
-
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
 				<select id="level" class="select select-primary w-full" name="level">
@@ -78,9 +74,6 @@
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<!-- {#if $errors.level}
-			<FormAlert bind:errorMessage={$errors.level} />
-		{/if} -->
 			<button class="btn btn-success" onclick="my_modal_5.close()" type="submit"> Crear </button>
 			<button onclick="my_modal_5.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button

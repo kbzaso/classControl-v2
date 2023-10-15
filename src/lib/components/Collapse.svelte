@@ -82,22 +82,14 @@
 								/>
 							</div>
 						</div>
-						<p>{assistant.first_name} {assistant.last_name}</p>
-						<Badge level={assistant.level} size={'badge-sm'} />
-					</figure>
-					{#if user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id}
-						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
-							><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
-								><path
-									fill="currentColor"
-									d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68ZM16 25c-5.3 0-10.9-3.93-12.93-9C5.1 10.93 10.7 7 16 7s10.9 3.93 12.93 9C26.9 21.07 21.3 25 16 25Z"
-								/><path
-									fill="currentColor"
-									d="M16 10a6 6 0 1 0 6 6a6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z"
-								/></svg
-							></a
+						<a
+							href={user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id ? `/alumnos/${assistant.id}` : `/perfil/${user.id}`}
+							class="flex flex-col"
 						>
-					{/if}
+							<p>{assistant.first_name} {assistant.last_name}</p>
+							<Badge level={assistant.level} size={'badge-sm'} />
+						</a>
+					</figure>
 				</li>
 			{/each}
 			{#if !userExists && user.classesRemaining > 0 && data.max_students >= data.assistants.length}
