@@ -31,7 +31,7 @@
 		}
 	}
 
-	const filteredUsers = users.filter(
+	$: filteredUsers = users.filter(
 		(user) => !training.assistants.some((assistant) => assistant.id === user.id)
 	);
 </script>

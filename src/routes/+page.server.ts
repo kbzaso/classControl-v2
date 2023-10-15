@@ -34,7 +34,7 @@ export const actions: Actions = {
 				// user does not exist
 				// or invalid password
 				return fail(400, {
-					error: 'Usuario no existe o cont craseña incorrecta'
+					error: 'Usuario no existe o con craseña incorrecta'
 				});
 			}
 			return fail(500, {

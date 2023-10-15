@@ -4,6 +4,8 @@
 	import HistoryCollapse from '$lib/components/HistoryCollapse.svelte';
 
 	export let data;
+	export let form;
+	$: ({ users } = data);
 
 	interface User {
 		id: string;
@@ -31,14 +33,16 @@
 			return false; // User cannot access class
 		}
 	}
-	console.log(data);
 </script>
 
 <main class="mb-20">
 	<h1 class="text-2xl font-semibold mt-4">Clases pasadas</h1>
 	{#each data.classes as training, index}
 		{#if canAccessClass(data.session.user, training)}
-			<HistoryCollapse data={training} user={data.session.user} users={data.users} training={training} />
+			{#if form?.error}
+				<p class="text-error">{form?.error}</p>
+			{/if}
+			<HistoryCollapse data={training} user={data.session.user} {users} {training} />
 		{/if}
 	{/each}
 </main>
