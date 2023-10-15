@@ -16,9 +16,9 @@
 
 	$: userExists = data.assistants.some((assistant) => assistant.id == user.id);
 
-	const date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
-	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
-	const formattedTime = format(date, 'HH:mm', { locale: es });
+	$: date = utcToZonedTime(new Date(data.when), 'America/Santiago', 'yyyy-MM-dd HH:mm:ss zzz');
+	$: formattedDate = format(date, 'EEEE d MMMM', { locale: es });
+	$: formattedTime = format(date, 'HH:mm', { locale: es });
 
 	$: firstThreeChars = data.id.substring(0, 3);
 
@@ -70,8 +70,8 @@
 	<ul class=" space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
 		{#key isOpen}
 			{#each data?.assistants as assistant}
-				<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
-					<figure class="flex items-center gap-2">
+				<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center">
+					<figure class="flex items-center gap-2 w-full">
 						<div class="avatar">
 							<div class="w-10 mask mask-squircle">
 								<img
@@ -82,13 +82,32 @@
 								/>
 							</div>
 						</div>
-						<a
-							href={user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id ? `/alumnos/${assistant.id}` : `/perfil/${user.id}`}
-							class="flex flex-col"
-						>
-							<p>{assistant.first_name} {assistant.last_name}</p>
-							<Badge level={assistant.level} size={'badge-sm'} />
-						</a>
+
+						{#if user.role === 'ADMIN'}
+							<div class="flex gap-2 justify-between w-full items-center">
+								<a
+									href={user.role === 'ADMIN' && $page.data.session.user.id !== assistant.id
+										? `/alumnos/${assistant.id}`
+										: `/perfil/${user.id}`}
+									class="flex flex-col"
+								>
+									<p>{assistant.first_name} {assistant.last_name}</p>
+									<div class="-mt-1">
+										<Badge level={assistant.level} size={'badge-sm'} />
+										{#if $page.data.session.user.id !== assistant.id}
+											<span class="badge badge-sm badge-success"
+												>Le quedan {assistant.classesRemaining} clases</span
+											>
+										{/if}
+									</div>
+								</a>
+							</div>
+						{:else}
+							<div class="flex flex-col">
+								<p>{assistant.first_name} {assistant.last_name}</p>
+								<Badge level={assistant.level} size={'badge-sm'} />
+							</div>
+						{/if}
 					</figure>
 				</li>
 			{/each}
