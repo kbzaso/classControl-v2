@@ -9,7 +9,7 @@ export const load = async ({ locals, request, cookies }) => {
 	const classes = async () =>
 		await client.class.findMany({
 			orderBy: {
-				when: 'asc'
+				when: 'desc'
 			},
 			select: {
 				id: true,

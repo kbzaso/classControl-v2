@@ -41,7 +41,10 @@
 	{#if data.session.user.level === null && data.session.user.role !== 'ADMIN'}
 		<p class="text-warning">Contactate con la profesora para activar tu cuenta</p>
 	{:else}
+
+	{#if data.session.user.role !== 'ADMIN'}
 		<span class="text-warning">Clases disponibles: {data.session.user.classesRemaining}</span>
+	{/if}
 
 		{#if data.classes.length === 0}
 			<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
