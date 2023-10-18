@@ -1,16 +1,14 @@
 <script lang="ts">
-		import { fly, slide } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
 	import Badge from '$lib/components/Badge.svelte';
-
 
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 
 	export let data: PageData;
 	$: ({ users, session } = data);
-
 </script>
 
 <section class="mb-40">
@@ -19,27 +17,33 @@
 	<div class="overflow-x-auto border rounded-xl border-blue-900">
 		<ul class="space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4">
 			{#each users as user}
-			<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
-				<figure class="flex items-center gap-2">
-					<div class="avatar">
-						<div class="w-10 mask mask-squircle">
-							<img
-								alt="Avatar"
-								src={user.avatarUrl
-									? `${PUBLIC_PROJECT_URL}/storage/v1/object/public/profiles/${user.avatarUrl}`
-									: 'https://assets.adnradio.cl/2022/03/Stone-Cold-Steve-Austin-WrestleMania-38-WWE.png'}
-							/>
+				<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
+					<figure class="flex items-center gap-2">
+						<div class="avatar">
+							<div class="w-10 mask mask-squircle">
+								<img
+									alt="Avatar"
+									src={user.avatarUrl
+										? `${PUBLIC_PROJECT_URL}/storage/v1/object/public/profiles/${user.avatarUrl}`
+										: 'https://assets.adnradio.cl/2022/03/Stone-Cold-Steve-Austin-WrestleMania-38-WWE.png'}
+								/>
+							</div>
 						</div>
-					</div>
-					<a
-					href={`/alumnos/${user.id}`}
-						class="flex flex-col"
-					>
-						<p>{user.first_name} {user.last_name}</p>
-						<Badge level={user.level} size={'badge-sm'} />
-					</a>
-				</figure>
-			</li>
+						<a href={`/alumnos/${user.id}`} class="flex flex-col">
+							<p>{user.first_name} {user.last_name}</p>
+							<div class="flex gap-1">
+								<Badge level={user.level} size={'badge-sm'} />
+								<span
+									class:badge-warning={user.classesRemaining <= 2 && user.classesRemaining > 0}
+									class:badge-error={(user.classesRemaining === 0)}
+									class:badge-success={user.classesRemaining > 2}
+									class={`badge badge-sm`}
+									>Le quedan {user.classesRemaining} clases</span
+								>
+							</div>
+						</a>
+					</figure>
+				</li>
 			{/each}
 		</ul>
 	</div>
@@ -66,7 +70,6 @@
 			<label for="first_name" class="text-gray-600">
 				Nombre
 				<input
-
 					type="text"
 					id="first_name"
 					name="first_name"
@@ -77,7 +80,6 @@
 			<label for="last_name" class="text-gray-600">
 				Apellido
 				<input
-
 					type="text"
 					id="last_name"
 					name="last_name"
@@ -87,11 +89,7 @@
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
-				<select
-					id="level"
-					class="select select-primary w-full"
-					name="level"
-				>
+				<select id="level" class="select select-primary w-full" name="level">
 					<option value="BASIC">Básico</option>
 					<option value="INTERMEDIATE">Intermedio</option>
 					<option value="ADVANCED">Avanzado</option>
@@ -99,7 +97,7 @@
 			</label>
 			<label for="plan" class="text-gray-600 flex flex-col gap-1">
 				Plan
-				<select id="plan" class="select select-primary w-full" name="plan" >
+				<select id="plan" class="select select-primary w-full" name="plan">
 					<option value="FOUR">4 clases menusales</option>
 					<option value="EIGHT">8 clases mensuales</option>
 					<option value="TWELVE">12 clases mensuales</option>
@@ -126,7 +124,7 @@
 			>
 
 			<button class="btn btn-success" onclick="my_modal_1.close()" type="submit">
-					Agregar Nuevo Alumno
+				Agregar Nuevo Alumno
 			</button>
 			<button onclick="my_modal_1.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button

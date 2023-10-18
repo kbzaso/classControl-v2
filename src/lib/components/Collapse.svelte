@@ -95,7 +95,11 @@
 									<div class="-mt-1">
 										<Badge level={assistant.level} size={'badge-sm'} />
 										{#if $page.data.session.user.id !== assistant.id}
-											<span class={`badge badge-sm ${assistant.classesRemaining <= 1 ? 'badge-warning' : 'badge-success' }`}
+											<span 
+											class:badge-success={assistant.classesRemaining > 2}
+											class:badge-warning={assistant.classesRemaining <= 2 && assistant.classesRemaining > 0}
+											class:badge-error={(assistant.classesRemaining === 0)} 
+											class={`badge badge-sm`}
 												>Le quedan {assistant.classesRemaining} clases</span
 											>
 										{/if}

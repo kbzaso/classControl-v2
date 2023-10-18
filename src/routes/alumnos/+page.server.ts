@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 			email: true,
 			level: true,
 			avatarUrl: true,
+			classesRemaining: true,
 		},
 		where: {
 			role: {
