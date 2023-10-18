@@ -7,7 +7,7 @@
 	import { classOpenId } from '$lib/stores.js';
 
 	import { format, formatDistance, formatRelative, subDays } from 'date-fns';
-	import { es } from 'date-fns/locale';
+	import es from 'date-fns/locale/es/index'
 	import { utcToZonedTime } from 'date-fns-tz';
 
 	export let data: any;
