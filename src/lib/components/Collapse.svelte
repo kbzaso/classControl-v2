@@ -94,7 +94,7 @@
 									<p>{assistant.first_name} {assistant.last_name}</p>
 									<div class="-mt-1">
 										<Badge level={assistant.level} size={'badge-sm'} />
-										{#if $page.data.session.user.id !== assistant.id}
+										{#if $page.data.session.user.id !== assistant.id && assistant.role !== 'ADMIN'}
 											<span 
 											class:badge-success={assistant.classesRemaining > 2}
 											class:badge-warning={assistant.classesRemaining <= 2 && assistant.classesRemaining > 0}
