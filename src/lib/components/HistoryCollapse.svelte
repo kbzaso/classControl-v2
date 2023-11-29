@@ -20,7 +20,7 @@
 	const formattedDate = format(date, 'EEEE d MMMM', { locale: es });
 	const formattedTime = format(date, 'HH:mm', { locale: es });
 
-	$: firstThreeChars = data.id.substring(0, 3);
+	$: firstThreeChars = data.id.substring(0, 5);
 
 	$: isOpen = $classOpenId === training.id ? true : false;
 
